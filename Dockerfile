@@ -1,4 +1,4 @@
-## Version: 0.0.2
+## Version: 0.0.3
 FROM ubuntu:14.10
 MAINTAINER Adolfo De Unánue Tiscareño "adolfo.deunanue@itam.mx"
 
