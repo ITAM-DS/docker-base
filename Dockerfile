@@ -11,8 +11,8 @@ ENV DEBIAN-FRONTEND noninteractive
 RUN apt-get -qq update
 
 ## Instalamos el software necesario
-RUN apt-get -y install tmux zsh build-essential git emacs24 curl autotools-dev automake pkg-config libncurses5-dev libevent-dev cowsay bc tree
-RUN apt-get -y install language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-pip libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make gcc libxml2-dev libxslt-dev software-properties-common
+RUN apt-get -y install tmux zsh build-essential git emacs24 curl autotools-dev automake pkg-config libncurses5-dev libevent-dev cowsay bc tree rsync
+RUN apt-get -y install language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools python-pip libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make gcc libxml2-dev libxslt-dev software-properties-common
 RUN apt-get -y install openjdk-7-jdk
 
 
