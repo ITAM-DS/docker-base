@@ -27,6 +27,10 @@ RUN dpkg-reconfigure locales
 ## El password es itam (así en minúsculas)
 ## Generado con openssl passwd -salt itam itam
 RUN useradd -d /home/itam -p itOo7XYSbU3nw -m -s /bin/zsh itam
+
+## Lo agregamos a sudoers
+RUN adduser itam sudo
+
 WORKDIR /home/itam
 
 ## Instalamos Oh-my-ZSH
