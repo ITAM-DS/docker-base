@@ -21,6 +21,16 @@ RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \
     && /usr/sbin/update-locale LANG=es_MX.UTF-8
 
 
+## Descargamos Scala
+RUN wget -P /home/itam/tmp -c 'http://downloads.typesafe.com/scala/2.11.6/scala-2.11.6.tgz'
+
+RUN tar xvfz /home/itam/tmp/scala-2.11.6.tgz -C /opt && \
+    ln -s /opt/scala-2.11.6 /opt/scala
+
+ENV JAVA_HOME /usr/lib/jvm/default-java
+ENV SCALA_HOME /opt/scala
+ENV PATH $PATH:$SCALA_HOME/bin:$JAVA_HOME/bin
+
 ## Reconfiguramos
 RUN dpkg-reconfigure locales
 
