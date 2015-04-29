@@ -11,9 +11,9 @@ ENV DEBIAN-FRONTEND noninteractive
 RUN apt-get -qq update
 
 ## Instalamos el software necesario
-RUN apt-get -y install tmux zsh build-essential git subversion doxygen emacs24 curl autotools-dev autoconf automake pkg-config libncurses5-dev libevent-dev cowsay bc tree rsync libtool
-RUN apt-get -y install language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools python-pip python-simplejson libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish
-RUN apt-get -y install openjdk-7-jdk default-jdk maven
+RUN apt-get -y --no-install-recommends install tmux zsh build-essential git subversion doxygen emacs24 curl autotools-dev autoconf automake pkg-config libncurses5-dev libevent-dev cowsay bc tree rsync libtool
+RUN apt-get -y --no-install-recommends install language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools python-pip python-simplejson libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish
+RUN apt-get -y --no-install-recommends install openjdk-7-jdk default-jdk maven
 
 
 RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \
