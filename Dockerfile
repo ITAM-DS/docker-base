@@ -1,36 +1,49 @@
-## Version: 0.1
+## Version: 0.2
 FROM ubuntu:14.10
 MAINTAINER Adolfo De Unánue Tiscareño "adolfo.deunanue@itam.mx"
 
-ENV REFRESHED_AT 2015-04-28
+ENV REFRESHED_AT 2015-09-15
 
 ## No queremos que sea interactivo
 ENV DEBIAN-FRONTEND noninteractive
+
+## Variables para el usuario
+ENV ITAM_USER itam
+ENV ITAM_UID 1000
 
 ## Actualizamos
 RUN apt-get -qq update
 
 ## Instalamos el software necesario
-RUN apt-get -y --no-install-recommends install tmux zsh build-essential git subversion doxygen emacs24 curl autotools-dev autoconf automake pkg-config libncurses5-dev libevent-dev cowsay bc tree rsync libtool
-RUN apt-get -y --no-install-recommends install language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools python-pip python-simplejson libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish
-RUN apt-get -y --no-install-recommends install openjdk-7-jdk default-jdk maven
+RUN apt-get -y --no-install-recommends install tmux zsh build-essential git curl autotools-dev autoconf automake pkg-config \
+    libncurses5-dev libevent-dev cowsay bc tree rsync libtool \
+    language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools \
+    python-pip python-simplejson libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev \
+    nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make npm gawk \
+    gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish \
+    openjdk-7-jdk default-jdk maven
 
+## Agregamos el repositorio de GNU/Emacs
+RUN apt-add-repository ppa:ubuntu-elisp/ppa && \
+    apt-get -qq update && \
+    apt-get -y install emacs-snapshot
+
+## Usamos como emacs la versión snapshot
+RUN update-alternatives --set emacs /usr/bin/emacs-snapshot
 
 RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen es_MX.utf8 \
     && /usr/sbin/update-locale LANG=es_MX.UTF-8
 
-
 ## Descargamos Scala
-RUN wget -P /tmp -c 'http://downloads.typesafe.com/scala/2.11.6/scala-2.11.6.tgz'
+##RUN wget -q -P /tmp -c 'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz'
 
-RUN tar xvfz /tmp/scala-2.11.6.tgz -C /opt && \
-    ln -s /opt/scala-2.11.6 /opt/scala
+##RUN tar xfz /tmp/scala-2.11.7.tgz -C /opt && \
+##    ln -s /opt/scala-2.11.7 /opt/scala
 
 ## Establecemos variables de ambiente
 ENV JAVA_HOME /usr/lib/jvm/default-java
-ENV SCALA_HOME /opt/scala
-ENV PATH $PATH:$SCALA_HOME/bin:$JAVA_HOME/bin
+ENV PATH $PATH:$JAVA_HOME/bin
 
 ## Reconfiguramos
 RUN dpkg-reconfigure locales
@@ -38,23 +51,38 @@ RUN dpkg-reconfigure locales
 ## Creamos el usuario itam
 ## El password es itam (así en minúsculas)
 ## Generado con openssl passwd -salt itam itam
-RUN useradd -d /home/itam -p itOo7XYSbU3nw -m -s /bin/zsh itam
+RUN useradd -m -s /bin/zsh -d /home/$ITAM_USER -N -u $ITAM_UID $ITAM_USER \
+    -p itOo7XYSbU3nw && \
+    mkdir /home/$ITAM_USER/proyectos && \
+    mkdir /home/$ITAM_USER/.local && \
+    mkdir /home/$ITAM_USER/.jupyter && \
+    chown -R $ITAM_USER:users /home/$ITAM_USER && \
+    chown -R root:users /opt
 
 ## Lo agregamos a sudoers
-RUN adduser itam sudo
+RUN adduser $ITAM_USER sudo
 
-WORKDIR /home/itam
+WORKDIR /home/$ITAM_USER
 
-## Instalamos Oh-my-ZSH
-RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~itam/.oh-my-zsh
-RUN cp ~itam/.oh-my-zsh/templates/zshrc.zsh-template ~itam/.zshrc
-RUN chsh -s /bin/zsh itam
+## Forzamos que el shell del usuario sea zsh
+RUN chsh -s /bin/zsh $ITAM_USER
+
+## Permisos de escritura al grupo en /opt
+RUN chmod -R g+w /opt
 
 ## Cambiamos al usuario itam
-USER itam
+USER $ITAM_USER
+
+## Instalamos Oh-my-ZSH
+RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
+    cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 
 ## Emacs Prelude
-RUN curl -L http://git.io/epre | sh
+RUN curl -L https://github.com/bbatsov/prelude/raw/master/utils/installer.sh | sh
+
+## Instalamos los paquetes de prelude
+## (NO va a quedar ejecutando un demonio de GNU/Emacs)
+RUN emacs --daemon
 
 ## Ejecutamos la consola
-RUN /bin/zsh
+CMD ["/bin/zsh"]
