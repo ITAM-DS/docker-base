@@ -34,6 +34,10 @@ RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen es_MX.utf8 \
     && /usr/sbin/update-locale LANG=es_MX.UTF-8
 
+
+## Instalamos GNU parallel
+RUN (wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
+
 ## Reconfiguramos
 RUN dpkg-reconfigure locales
 
