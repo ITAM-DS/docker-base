@@ -20,7 +20,7 @@ RUN apt-get -y --no-install-recommends install tmux zsh build-essential git curl
     language-pack-en language-pack-es make gcc zlib1g-dev git python python-dev python-setuptools \
     python-pip python-simplejson jq libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev \
     nodejs libblas-dev liblapack-dev gfortran libfreetype6-dev libpng-dev wget make npm gawk \
-    gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish man-db
+    gcc libxml2-dev libxslt1-dev software-properties-common aspell aspell-es aspell-en ispell ispanish man-db openssh-client
 
 ## Agregamos el repositorio de GNU/Emacs
 RUN apt-add-repository ppa:ubuntu-elisp/ppa && \
