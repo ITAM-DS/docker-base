@@ -1,8 +1,8 @@
-## Version: 0.3
-FROM ubuntu:15.04
+## Version: 0.5
+FROM ubuntu:16.04
 MAINTAINER Adolfo De Unánue Tiscareño "adolfo.deunanue@itam.mx"
 
-ENV REFRESHED_AT 2016-01-19
+ENV REFRESHED_AT 2016-08-19
 
 ## No queremos que sea interactivo
 ENV DEBIAN-FRONTEND noninteractive
